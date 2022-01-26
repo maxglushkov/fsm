@@ -1,0 +1,11 @@
+4
+2
+SS 0 AM
+SS 0 F
+SS 1 BM
+AM 0 SS
+AM 0 AM
+AM 1 BM
+BM 0 F
+BM 1 BM
+BM 1 F

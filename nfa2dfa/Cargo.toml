@@ -1,0 +1,7 @@
+[package]
+name = "nfa2dfa"
+version = "0.0.1"
+edition = "2018"
+publish = false
+[dependencies]
+fsm = {path = "../fsm"}

@@ -1,0 +1,10 @@
+[workspace]
+members = [
+	"automaton2dot",
+	"dfa2dot",
+	"fsm",
+	"minimize",
+	"nfa2dfa",
+	"regexp2nfa",
+	"regram2nfa"
+]

@@ -1,0 +1,63 @@
+#!/bin/sh
+
+if [ $# -ne 1 ]; then
+	echo "Usage: $0 <path to executable>" >&2
+	exit 1
+fi
+dir="$(dirname "$0")/"
+exe="$1"
+out="$(mktemp --tmpdir tmp.XXXXXXXXXX)"
+
+function run_test(){
+	echo -n "$2 ... "
+	if "$exe" <"$dir$1.in" >"$out"; then
+		diff -Z --color "$out" "$dir$1.out"
+	else
+		[ ! -f "$dir$1.out" ]
+	fi
+	[ $? -eq 0 ] && echo "OK" || echo "FAILED"
+}
+
+case "$(basename "$0")" in
+minimize)
+	run_test 1 "Machine without states"
+	run_test 2 "Moore machine without inputs"
+	run_test 3 "Mealy machine without inputs"
+	run_test 4 "Machine with empty model name"
+	run_test 5 "Model name and amounts on the same line"
+	run_test 6 "Amounts on the same line"
+	run_test 7 "States and outputs on the same line"
+	run_test 8 "Ill formed matrix"
+	run_test 9 "Missing matrix cell"
+	run_test 10 "Too high output value"
+	run_test 11 "Mealy minimization"
+	run_test 12 "Moore minimization with unreachable states cleaning"
+	run_test 13 "Minimal Mealy automaton"
+	run_test 14 "Minimal Moore automaton"
+	;;
+regram2nfa)
+	run_test 15 "Right-regular grammar"
+	run_test 16 "Left-regular grammar"
+	run_test 17 "Non-standard grammar type"
+	run_test 18 "Empty grammar type"
+	run_test 19 "Empty rule definition"
+	run_test 20 "Regular grammar with no inputs"
+	run_test 27 "Right-regular grammar with both initial and final rule"
+	run_test 28 "Left-regular grammar with both initial and final rule"
+	;;
+nfa2dfa)
+	run_test 21 "Empty states count"
+	run_test 22 "Invalid inputs count"
+	run_test 23 "Too few fields in transition definition"
+	run_test 24 "Too many fields in transition definition"
+	run_test 25 "Multiple characters in input field"
+	run_test 26 "Deterministic automaton"
+	run_test 29 "Initial state is merged into several generated states"
+	run_test 30 "Initial state is not first state"
+	;;
+*)
+	echo "No test suite selected" >&2
+	;;
+esac
+
+rm -f "$out"
